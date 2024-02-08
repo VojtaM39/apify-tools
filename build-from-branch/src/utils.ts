@@ -58,6 +58,5 @@ export const getCurrentFolder = (rootPath: string): string => {
 };
 
 export const createGitRepoUrl = (remote: string, branch: string, path: string): string => {
-    // FIXME
     return `${remote}#${branch}:${path}`;
 };
