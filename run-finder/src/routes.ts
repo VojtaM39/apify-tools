@@ -4,7 +4,7 @@ import { ExtendedContext, Labels, ListUserData, OutputItem, RunUserData } from '
 import { RUNS_PER_PAGE } from './constants.js';
 import { createPlaceholderRequest, isInputMatchingPattern } from './utils.js';
 
-const client = Actor.newClient({ token: process.env.TOKEN_OVERRIDE ?? process.env.APIFY_TOKEN });
+const client = Actor.newClient({ token: process.env.TOKEN_OVERRIDE || process.env.APIFY_TOKEN });
 
 export const router = createBasicRouter<ExtendedContext>();
 
