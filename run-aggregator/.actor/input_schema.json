@@ -3,13 +3,6 @@
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "proxy": {
-            "title": "Input pattern",
-            "type": "object",
-            "description": "",
-            "editor": "json",
-            "default": {}
-        },
         "actorId": {
             "title": "Actor ID",
             "type": "string",
@@ -28,11 +21,30 @@
             "description": "",
             "default": 1000
         },
-        "stopOnFound": {
-            "title": "Stop on Found",
+        "aggregateRunDetails": {
+            "title": "Aggregate run details",
             "type": "boolean",
-            "default": false,
-            "description": ""
+            "description": "",
+            "default": true
+        },
+        "aggregateInputs": {
+            "title": "Aggregate inputs",
+            "type": "boolean",
+            "description": "",
+            "default": true
+        },
+        "aggregateDatasets": {
+            "title": "Aggregate datasets",
+            "type": "boolean",
+            "description": "",
+            "default": true
+        },
+        "tokenOverride": {
+            "title": "Token override",
+            "type": "string",
+            "description": "",
+            "editor": "textfield",
+            "isSecret": true
         }
     }
 }
