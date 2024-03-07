@@ -6,16 +6,20 @@ import { createPlaceholderRequest } from './utils.js';
 
 await Actor.init();
 
-const { actorId, taskId, maxRuns, aggregateInputs, aggregateDatasets } = (await Actor.getInput<InputSchema>())!;
+const { actorId, taskId, maxRuns, aggregateRunDetails, aggregateInputs, aggregateDatasets, tokenOverride } = (await Actor.getInput<InputSchema>())!;
 if (!aggregateInputs && !aggregateDatasets) throw await Actor.fail('At least one of aggregateInputs or aggregateDatasets must be true');
 
 if (!maxRuns) throw new Error('Missing maxRuns input');
+
+const client = Actor.newClient({ token: tokenOverride || process.env.TOKEN_OVERRIDE || process.env.APIFY_TOKEN });
 
 const crawler = new BasicCrawler({
     maxConcurrency: 3,
     requestHandler: (context) => router({
         ...context,
+        client,
         maxRuns,
+        aggregateRunDetails: !!aggregateRunDetails,
         aggregateInputs: !!aggregateInputs,
         aggregateDatasets: !!aggregateDatasets,
     }),
