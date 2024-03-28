@@ -18,24 +18,30 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
     // Enqueue next page request
     const nextOffset = offset + RUNS_PER_PAGE;
     if (nextOffset < maxRuns) {
-        const nextRequest = createPlaceholderRequest<ListUserData>({
-            label: Labels.List,
-            offset: nextOffset,
-            actorId,
-            taskId,
-        });
+        const nextRequest = createPlaceholderRequest<ListUserData>(
+            {
+                label: Labels.List,
+                offset: nextOffset,
+                actorId,
+                taskId,
+            },
+            `list-${nextOffset}`,
+        );
         await crawler.requestQueue?.addRequest(nextRequest);
     }
 
     // Enqueue run requests
     const runRequests = runs
         .slice(0, maxRuns - offset)
-        .map((run) => createPlaceholderRequest<RunUserData>({
-            label: Labels.Run,
-            id: run.id,
-            defaultKeyValueStoreId: run.defaultKeyValueStoreId,
-            defaultDatasetId: run.defaultDatasetId,
-        }));
+        .map((run) => createPlaceholderRequest<RunUserData>(
+            {
+                label: Labels.Run,
+                id: run.id,
+                defaultKeyValueStoreId: run.defaultKeyValueStoreId,
+                defaultDatasetId: run.defaultDatasetId,
+            },
+            `run-${run.id}`,
+        ));
     await crawler.addRequests(runRequests);
 });
 

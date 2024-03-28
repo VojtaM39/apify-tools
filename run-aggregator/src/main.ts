@@ -25,12 +25,15 @@ const crawler = new BasicCrawler({
     }),
 });
 
-const startRequest = createPlaceholderRequest<ListUserData>({
-    offset: 0,
-    actorId,
-    taskId,
-    label: Labels.List,
-});
+const startRequest = createPlaceholderRequest<ListUserData>(
+    {
+        offset: 0,
+        actorId,
+        taskId,
+        label: Labels.List,
+    },
+    'list-0',
+);
 
 await crawler.run([startRequest]);
 
