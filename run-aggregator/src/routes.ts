@@ -45,7 +45,16 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
     await crawler.addRequests(runRequests);
 });
 
-router.addHandler<RunUserData>(Labels.Run, async ({ request, log, aggregateRunDetails, aggregateDatasets, aggregateInputs, client }) => {
+router.addHandler<RunUserData>(Labels.Run, async ({
+    request,
+    log,
+    aggregateRunDetails,
+    aggregateDatasets,
+    aggregateInputs,
+    aggregateLogs,
+    truncateLogs,
+    client,
+}) => {
     const { id, defaultKeyValueStoreId, defaultDatasetId } = request.userData;
     log.info(`[Run] - id: ${id}`);
 
@@ -68,10 +77,17 @@ router.addHandler<RunUserData>(Labels.Run, async ({ request, log, aggregateRunDe
         datasetItems = items;
     }
 
+    let runLog = null;
+    if (aggregateLogs) {
+        runLog = (await client.log(id).get()) ?? null;
+        if (runLog && truncateLogs) runLog.slice(-truncateLogs);
+    }
+
     await Actor.pushData<OutputItem>({
         runId: id,
         run,
         input,
         datasetItems,
+        runLog,
     });
 });
