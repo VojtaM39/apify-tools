@@ -39,6 +39,18 @@
             "description": "",
             "default": true
         },
+        "aggregateLogs": {
+            "title": "Aggregate logs",
+            "type": "boolean",
+            "description": "",
+            "default": true
+        },
+        "truncateLogs": {
+            "title": "Max Runs",
+            "type": "integer",
+            "description": "",
+            "default": 1000
+        },
         "tokenOverride": {
             "title": "Token override",
             "type": "string",

@@ -28,6 +28,8 @@ export interface ExtendedContext extends BasicCrawlingContext {
     aggregateRunDetails: boolean;
     aggregateInputs: boolean;
     aggregateDatasets: boolean;
+    aggregateLogs: boolean;
+    truncateLogs?: number;
 }
 
 export interface InputSchema {
@@ -37,6 +39,8 @@ export interface InputSchema {
     aggregateInputs?: boolean;
     aggregateDatasets?: boolean;
     aggregateRunDetails?: boolean;
+    aggregateLogs?: boolean;
+    truncateLogs?: number;
     tokenOverride?: string;
 }
 
@@ -45,4 +49,5 @@ export interface OutputItem {
     run: ActorRun | null;
     input: Record<string, unknown> | null;
     datasetItems: Record<string, unknown>[] | null;
+    runLog: string | null;
 }
