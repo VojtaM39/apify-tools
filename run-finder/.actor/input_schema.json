@@ -3,7 +3,7 @@
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "proxy": {
+        "inputPattern": {
             "title": "Input pattern",
             "type": "object",
             "description": "",
