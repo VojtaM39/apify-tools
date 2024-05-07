@@ -1,3 +1,4 @@
+import { ApifyClient } from 'apify';
 import { BasicCrawlingContext } from 'crawlee';
 
 export enum Labels {
@@ -21,6 +22,7 @@ export interface RunUserData extends BaseUserData {
 }
 
 export interface ExtendedContext extends BasicCrawlingContext {
+    client: ApifyClient;
     maxRuns: number;
     inputPattern: Record<string, string>;
     stopOnFound?: boolean;
@@ -32,6 +34,7 @@ export interface InputSchema {
     maxRuns?: number;
     inputPattern?: Record<string, string>;
     stopOnFound?: boolean;
+    tokenOverride?: string;
 }
 
 export interface OutputItem {

@@ -33,6 +33,13 @@
             "type": "boolean",
             "default": false,
             "description": ""
+        },
+        "tokenOverride": {
+            "title": "Token override",
+            "type": "string",
+            "description": "",
+            "editor": "textfield",
+            "isSecret": true
         }
     }
 }
