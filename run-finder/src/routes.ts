@@ -4,11 +4,9 @@ import { ExtendedContext, Labels, ListUserData, OutputItem, RunUserData } from '
 import { RUNS_PER_PAGE } from './constants.js';
 import { createPlaceholderRequest, isInputMatchingPattern } from './utils.js';
 
-const client = Actor.newClient({ token: process.env.TOKEN_OVERRIDE || process.env.APIFY_TOKEN });
-
 export const router = createBasicRouter<ExtendedContext>();
 
-router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler }) => {
+router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client }) => {
     const { offset, actorId, taskId } = request.userData;
     const actorOrTaskClient = actorId ? client.actor(actorId) : client.task(taskId!);
 
@@ -39,7 +37,7 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
     await crawler.addRequests(runRequests);
 });
 
-router.addHandler<RunUserData>(Labels.Run, async ({ request, log, crawler, inputPattern, stopOnFound }) => {
+router.addHandler<RunUserData>(Labels.Run, async ({ request, log, crawler, inputPattern, stopOnFound, client }) => {
     const { id, defaultKeyValueStoreId } = request.userData;
     log.info(`[Run] - id: ${id}`);
 

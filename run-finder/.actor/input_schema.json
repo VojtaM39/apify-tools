@@ -3,7 +3,7 @@
     "type": "object",
     "schemaVersion": 1,
     "properties": {
-        "proxy": {
+        "inputPattern": {
             "title": "Input pattern",
             "type": "object",
             "description": "",
@@ -33,6 +33,13 @@
             "type": "boolean",
             "default": false,
             "description": ""
+        },
+        "tokenOverride": {
+            "title": "Token override",
+            "type": "string",
+            "description": "",
+            "editor": "textfield",
+            "isSecret": true
         }
     }
 }
