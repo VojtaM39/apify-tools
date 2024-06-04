@@ -1,10 +1,9 @@
 import { Dictionary, RequestOptions } from 'crawlee';
-import { v4 } from 'uuid';
 
-export const createPlaceholderRequest = <T extends Dictionary>(userData: T): RequestOptions<T> => ({
+export const createPlaceholderRequest = <T extends Dictionary>(userData: T, uniqueKey: string): RequestOptions<T> => ({
     url: 'https://placeholder.com',
     userData,
-    uniqueKey: v4(),
+    uniqueKey,
 });
 
 export const isInputMatchingPattern = (input: Record<string, unknown>, pattern: Record<string, unknown>): boolean => {

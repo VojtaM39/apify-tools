@@ -15,15 +15,19 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
     const { items: runs } = await actorOrTaskClient.runs().list({ offset, limit: RUNS_PER_PAGE, desc: true });
 
     // Enqueue next page request
-    const nextOffset = offset + RUNS_PER_PAGE;
-    if (nextOffset < maxRuns) {
-        const nextRequest = createPlaceholderRequest<ListUserData>({
-            label: Labels.List,
-            offset: nextOffset,
-            actorId,
-            taskId,
-        });
-        await crawler.requestQueue?.addRequest(nextRequest);
+    if (offset === 0) {
+        const listRequests = Array.from({ length: Math.ceil(maxRuns / RUNS_PER_PAGE) }, (_, i) => i * RUNS_PER_PAGE)
+            .slice(1)
+            .map((nextOffset) => createPlaceholderRequest<ListUserData>(
+                {
+                    label: Labels.List,
+                    offset: nextOffset,
+                    actorId,
+                    taskId,
+                },
+                `list-${nextOffset}`,
+            ));
+        await crawler.addRequests(listRequests);
     }
 
     // Enqueue run requests
@@ -36,13 +40,16 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
 
     if (Object.keys(inputPattern).length > 0) {
         const runRequests = filteredRuns
-            .map((run) => createPlaceholderRequest<RunUserData>({
-                label: Labels.Run,
-                id: run.id,
-                defaultKeyValueStoreId: run.defaultKeyValueStoreId,
-                startedAt: run.startedAt.toISOString(),
-                status: run.status,
-            }));
+            .map((run) => createPlaceholderRequest<RunUserData>(
+                {
+                    label: Labels.Run,
+                    id: run.id,
+                    defaultKeyValueStoreId: run.defaultKeyValueStoreId,
+                    startedAt: run.startedAt.toISOString(),
+                    status: run.status,
+                },
+                `detail-${run.id}`,
+            ));
         await crawler.addRequests(runRequests);
     } else {
         const outputItems: OutputItem[] = filteredRuns.map(({ id, defaultKeyValueStoreId, startedAt, status }) => ({
