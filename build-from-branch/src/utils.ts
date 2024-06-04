@@ -1,6 +1,7 @@
 import { readFileSync, existsSync } from 'node:fs';
 import { join, relative } from 'path';
 import { exec } from 'child_process';
+import commandLineArgs from 'command-line-args';
 import { LOCAL_CONFIG_PATH } from './constants.js';
 
 interface Config {
@@ -59,4 +60,15 @@ export const getCurrentFolder = (rootPath: string): string => {
 
 export const createGitRepoUrl = (remote: string, branch: string, path: string): string => {
     return `${remote}#${branch}:${path}`;
+};
+
+interface CommandLineArguments {
+    version?: string;
+}
+export const parseCommandLineArguments = (): CommandLineArguments => {
+    const optionDefinitions = [
+        { name: 'version', alias: 'v', type: String },
+    ];
+    const args = commandLineArgs(optionDefinitions);
+    return args as CommandLineArguments;
 };
