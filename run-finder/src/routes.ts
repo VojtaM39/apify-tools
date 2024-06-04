@@ -34,7 +34,7 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
             return statuses.includes(run.status);
         });
 
-    if (inputPattern) {
+    if (Object.keys(inputPattern).length > 0) {
         const runRequests = filteredRuns
             .map((run) => createPlaceholderRequest<RunUserData>({
                 label: Labels.Run,
@@ -58,7 +58,7 @@ router.addHandler<RunUserData>(Labels.Run, async ({ request, log, crawler, input
         return;
     }
 
-    const patternMatch = isInputMatchingPattern(inputRecord!.value as Record<string, unknown>, inputPattern!);
+    const patternMatch = isInputMatchingPattern(inputRecord!.value as Record<string, unknown>, inputPattern);
     if (patternMatch) {
         log.info(`[Run] - id: ${id}, defaultKeyValueStoreId: ${defaultKeyValueStoreId} - Match found`);
         await Actor.pushData<OutputItem>({ id, defaultKeyValueStoreId });
