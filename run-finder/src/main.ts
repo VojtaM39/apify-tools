@@ -6,9 +6,8 @@ import { createPlaceholderRequest } from './utils.js';
 
 await Actor.init();
 
-const { actorId, taskId, maxRuns, inputPattern, statuses, stopOnFound, tokenOverride } = (await Actor.getInput<InputSchema>())!;
+const { actorId, taskId, maxRuns, inputPattern = {}, statuses, stopOnFound, tokenOverride } = (await Actor.getInput<InputSchema>())!;
 
-if (!inputPattern && !statuses) throw new Error('Missing inputPattern or statuses input');
 if (!maxRuns) throw new Error('Missing maxRuns input');
 
 const client = Actor.newClient({ token: tokenOverride || process.env.TOKEN_OVERRIDE || process.env.APIFY_TOKEN });
