@@ -40,16 +40,23 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
                 label: Labels.Run,
                 id: run.id,
                 defaultKeyValueStoreId: run.defaultKeyValueStoreId,
+                startedAt: run.startedAt.toISOString(),
+                status: run.status,
             }));
         await crawler.addRequests(runRequests);
     } else {
-        const outputItems: OutputItem[] = filteredRuns.map(({ id, defaultKeyValueStoreId }) => ({ id, defaultKeyValueStoreId }));
+        const outputItems: OutputItem[] = filteredRuns.map(({ id, defaultKeyValueStoreId, startedAt, status }) => ({
+            id,
+            defaultKeyValueStoreId,
+            startedAt: startedAt.toISOString(),
+            status,
+        }));
         await Actor.pushData(outputItems);
     }
 });
 
 router.addHandler<RunUserData>(Labels.Run, async ({ request, log, crawler, inputPattern, stopOnFound, client }) => {
-    const { id, defaultKeyValueStoreId } = request.userData;
+    const { id, defaultKeyValueStoreId, startedAt, status } = request.userData;
     log.info(`[Run] - id: ${id}`);
 
     const inputRecord = await client.keyValueStore(defaultKeyValueStoreId).getRecord('INPUT');
@@ -61,7 +68,12 @@ router.addHandler<RunUserData>(Labels.Run, async ({ request, log, crawler, input
     const patternMatch = isInputMatchingPattern(inputRecord!.value as Record<string, unknown>, inputPattern);
     if (patternMatch) {
         log.info(`[Run] - id: ${id}, defaultKeyValueStoreId: ${defaultKeyValueStoreId} - Match found`);
-        await Actor.pushData<OutputItem>({ id, defaultKeyValueStoreId });
+        await Actor.pushData<OutputItem>({
+            id,
+            defaultKeyValueStoreId,
+            startedAt,
+            status,
+        });
 
         if (stopOnFound) await crawler.autoscaledPool?.abort();
     }

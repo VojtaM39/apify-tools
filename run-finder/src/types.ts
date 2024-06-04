@@ -19,6 +19,8 @@ export interface ListUserData extends BaseUserData {
 export interface RunUserData extends BaseUserData {
     id: string;
     defaultKeyValueStoreId: string;
+    status: string;
+    startedAt: string;
 }
 
 export interface ExtendedContext extends BasicCrawlingContext {
@@ -42,4 +44,6 @@ export interface InputSchema {
 export interface OutputItem {
     id: string;
     defaultKeyValueStoreId: string;
+    startedAt: string;
+    status: string;
 }
