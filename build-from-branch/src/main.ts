@@ -42,5 +42,7 @@ if (versionExists) {
 
 const build = await actorClient.build(versionNumber);
 log.info(`The build is running: ${build.id}, version: ${versionNumber}`);
-await client.build(build.id).waitForFinish();
-log.info('Actor build finished');
+const buildRun = await client.build(build.id).waitForFinish();
+
+if (buildRun.status === 'SUCCEEDED') log.info('Actor build finished');
+else log.error('Actor build failed');
