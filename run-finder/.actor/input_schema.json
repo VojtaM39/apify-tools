@@ -10,6 +10,12 @@
             "editor": "json",
             "default": {}
         },
+        "statuses": {
+            "title": "Statuses",
+            "description": "",
+            "type": "array",
+            "editor": "stringList"
+        },
         "actorId": {
             "title": "Actor ID",
             "type": "string",

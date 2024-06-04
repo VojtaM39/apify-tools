@@ -24,7 +24,8 @@ export interface RunUserData extends BaseUserData {
 export interface ExtendedContext extends BasicCrawlingContext {
     client: ApifyClient;
     maxRuns: number;
-    inputPattern: Record<string, string>;
+    inputPattern?: Record<string, string>;
+    statuses?: string[];
     stopOnFound?: boolean;
 }
 
@@ -33,6 +34,7 @@ export interface InputSchema {
     taskId?: string;
     maxRuns?: number;
     inputPattern?: Record<string, string>;
+    statuses?: string[];
     stopOnFound?: boolean;
     tokenOverride?: string;
 }

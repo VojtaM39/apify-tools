@@ -6,7 +6,7 @@ import { createPlaceholderRequest, isInputMatchingPattern } from './utils.js';
 
 export const router = createBasicRouter<ExtendedContext>();
 
-router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client }) => {
+router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client, statuses, inputPattern }) => {
     const { offset, actorId, taskId } = request.userData;
     const actorOrTaskClient = actorId ? client.actor(actorId) : client.task(taskId!);
 
@@ -27,14 +27,25 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
     }
 
     // Enqueue run requests
-    const runRequests = runs
+    const filteredRuns = runs
         .slice(0, maxRuns - offset)
-        .map((run) => createPlaceholderRequest<RunUserData>({
-            label: Labels.Run,
-            id: run.id,
-            defaultKeyValueStoreId: run.defaultKeyValueStoreId,
-        }));
-    await crawler.addRequests(runRequests);
+        .filter((run) => {
+            if (!statuses) return true;
+            return statuses.includes(run.status);
+        });
+
+    if (inputPattern) {
+        const runRequests = filteredRuns
+            .map((run) => createPlaceholderRequest<RunUserData>({
+                label: Labels.Run,
+                id: run.id,
+                defaultKeyValueStoreId: run.defaultKeyValueStoreId,
+            }));
+        await crawler.addRequests(runRequests);
+    } else {
+        const outputItems: OutputItem[] = filteredRuns.map(({ id, defaultKeyValueStoreId }) => ({ id, defaultKeyValueStoreId }));
+        await Actor.pushData(outputItems);
+    }
 });
 
 router.addHandler<RunUserData>(Labels.Run, async ({ request, log, crawler, inputPattern, stopOnFound, client }) => {
@@ -47,7 +58,7 @@ router.addHandler<RunUserData>(Labels.Run, async ({ request, log, crawler, input
         return;
     }
 
-    const patternMatch = isInputMatchingPattern(inputRecord!.value as Record<string, unknown>, inputPattern);
+    const patternMatch = isInputMatchingPattern(inputRecord!.value as Record<string, unknown>, inputPattern!);
     if (patternMatch) {
         log.info(`[Run] - id: ${id}, defaultKeyValueStoreId: ${defaultKeyValueStoreId} - Match found`);
         await Actor.pushData<OutputItem>({ id, defaultKeyValueStoreId });
