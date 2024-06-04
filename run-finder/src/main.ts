@@ -17,12 +17,15 @@ const crawler = new BasicCrawler({
     requestHandler: (context) => router({ ...context, maxRuns, inputPattern, statuses, stopOnFound, client }),
 });
 
-const startRequest = createPlaceholderRequest<ListUserData>({
-    offset: 0,
-    actorId,
-    taskId,
-    label: Labels.List,
-});
+const startRequest = createPlaceholderRequest<ListUserData>(
+    {
+        offset: 0,
+        actorId,
+        taskId,
+        label: Labels.List,
+    },
+    'list-0',
+);
 
 await crawler.run([startRequest]);
 
