@@ -14,6 +14,7 @@ const client = Actor.newClient({ token: tokenOverride || process.env.TOKEN_OVERR
 
 const crawler = new BasicCrawler({
     maxConcurrency: 3,
+    requestHandlerTimeoutSecs: 120,
     requestHandler: (context) => router({ ...context, maxRuns, inputPattern, statuses, stopOnFound, client }),
 });
 
