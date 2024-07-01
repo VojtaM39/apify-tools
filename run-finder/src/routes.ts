@@ -12,11 +12,13 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
 
     log.info(`[List] - offset: ${offset}, maxRuns: ${maxRuns}`);
 
-    const { items: runs } = await actorOrTaskClient.runs().list({ offset, limit: RUNS_PER_PAGE, desc: true });
+    const { items: runs, total } = await actorOrTaskClient.runs().list({ offset, limit: RUNS_PER_PAGE, desc: true });
 
     // Enqueue next page request
     if (offset === 0) {
-        const listRequests = Array.from({ length: Math.ceil(maxRuns / RUNS_PER_PAGE) }, (_, i) => i * RUNS_PER_PAGE)
+        const maxRunsToScrape = Math.min(maxRuns, total);
+        log.info(`[List] - total runs to scrape: ${maxRunsToScrape}`);
+        const listRequests = Array.from({ length: Math.ceil(maxRunsToScrape / RUNS_PER_PAGE) }, (_, i) => i * RUNS_PER_PAGE)
             .slice(1)
             .map((nextOffset) => createPlaceholderRequest<ListUserData>(
                 {
