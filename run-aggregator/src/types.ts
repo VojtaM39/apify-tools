@@ -1,4 +1,5 @@
 import { ActorRun, ApifyClient } from 'apify';
+import { Dataset } from 'apify-client';
 import { BasicCrawlingContext } from 'crawlee';
 
 export enum Labels {
@@ -29,6 +30,7 @@ export interface ExtendedContext extends BasicCrawlingContext {
     aggregateInputs: boolean;
     aggregateDatasets: boolean;
     aggregateLogs: boolean;
+    aggregateDatasetInfo: boolean;
     truncateLogs?: number;
 }
 
@@ -40,6 +42,7 @@ export interface InputSchema {
     aggregateDatasets?: boolean;
     aggregateRunDetails?: boolean;
     aggregateLogs?: boolean;
+    aggregateDatasetInfo?: boolean;
     truncateLogs?: number;
     tokenOverride?: string;
 }
@@ -49,5 +52,6 @@ export interface OutputItem {
     run: ActorRun | null;
     input: Record<string, unknown> | null;
     datasetItems: Record<string, unknown>[] | null;
+    datasetInfo: Dataset | null;
     runLog: string | null;
 }

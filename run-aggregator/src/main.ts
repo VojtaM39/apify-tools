@@ -14,10 +14,10 @@ const {
     aggregateInputs,
     aggregateDatasets,
     aggregateLogs,
+    aggregateDatasetInfo,
     truncateLogs,
     tokenOverride,
 } = (await Actor.getInput<InputSchema>())!;
-if (!aggregateInputs && !aggregateDatasets) throw await Actor.fail('At least one of aggregateInputs or aggregateDatasets must be true');
 
 if (!maxRuns) throw new Error('Missing maxRuns input');
 
@@ -34,6 +34,7 @@ const crawler = new BasicCrawler({
         aggregateInputs: !!aggregateInputs,
         aggregateDatasets: !!aggregateDatasets,
         aggregateLogs: !!aggregateLogs,
+        aggregateDatasetInfo: !!aggregateDatasetInfo,
         truncateLogs,
     }),
 });
