@@ -8,6 +8,7 @@
     },
     "dependencies": {
         "apify": "^3.1.10",
+        "apify-client": "^2.9.4",
         "crawlee": "^3.5.4",
         "uuid": "^9.0.1"
     },

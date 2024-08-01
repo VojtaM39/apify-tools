@@ -52,6 +52,7 @@ router.addHandler<RunUserData>(Labels.Run, async ({
     aggregateDatasets,
     aggregateInputs,
     aggregateLogs,
+    aggregateDatasetInfo,
     truncateLogs,
     client,
 }) => {
@@ -83,11 +84,17 @@ router.addHandler<RunUserData>(Labels.Run, async ({
         if (runLog && truncateLogs) runLog.slice(-truncateLogs);
     }
 
+    let datasetInfo = null;
+    if (aggregateDatasetInfo) {
+        datasetInfo = (await client.dataset(defaultDatasetId).get()) ?? null;
+    }
+
     await Actor.pushData<OutputItem>({
         runId: id,
         run,
         input,
         datasetItems,
+        datasetInfo,
         runLog,
     });
 });

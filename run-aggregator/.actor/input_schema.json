@@ -45,8 +45,14 @@
             "description": "",
             "default": true
         },
+        "aggregateDatasetInfo": {
+            "title": "Aggregate dataset info",
+            "type": "boolean",
+            "description": "",
+            "default": true
+        },
         "truncateLogs": {
-            "title": "Max Runs",
+            "title": "Truncate logs",
             "type": "integer",
             "description": "",
             "default": 1000
