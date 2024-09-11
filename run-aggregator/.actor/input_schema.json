@@ -21,6 +21,12 @@
             "description": "",
             "default": 1000
         },
+        "runOffset": {
+            "title": "Run offset",
+            "type": "integer",
+            "description": "Number of runs to skip",
+            "default": 0
+        },
         "aggregateRunDetails": {
             "title": "Aggregate run details",
             "type": "boolean",

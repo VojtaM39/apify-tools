@@ -6,17 +6,18 @@ import { createPlaceholderRequest } from './utils.js';
 
 export const router = createBasicRouter<ExtendedContext>();
 
-router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client }) => {
+router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client, runOffset }) => {
     const { offset, actorId, taskId } = request.userData;
 
     const actorOrTaskClient = actorId ? client.actor(actorId) : client.task(taskId!);
 
     log.info(`[List] - offset: ${offset}, maxRuns: ${maxRuns}`);
 
-    const { items: runs } = await actorOrTaskClient.runs().list({ offset, limit: RUNS_PER_PAGE, desc: true });
+    const limit = Math.min(maxRuns - offset + runOffset, RUNS_PER_PAGE);
+    const { items: runs } = await actorOrTaskClient.runs().list({ offset, limit, desc: true });
 
     // Enqueue next page request
-    const nextOffset = offset + RUNS_PER_PAGE;
+    const nextOffset = offset + limit;
     if (nextOffset < maxRuns) {
         const nextRequest = createPlaceholderRequest<ListUserData>(
             {
@@ -32,7 +33,6 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
 
     // Enqueue run requests
     const runRequests = runs
-        .slice(0, maxRuns - offset)
         .map((run) => createPlaceholderRequest<RunUserData>(
             {
                 label: Labels.Run,

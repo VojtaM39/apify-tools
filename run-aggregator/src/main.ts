@@ -10,6 +10,7 @@ const {
     actorId,
     taskId,
     maxRuns,
+    runOffset = 0,
     aggregateRunDetails,
     aggregateInputs,
     aggregateDatasets,
@@ -30,6 +31,7 @@ const crawler = new BasicCrawler({
         ...context,
         client,
         maxRuns,
+        runOffset,
         aggregateRunDetails: !!aggregateRunDetails,
         aggregateInputs: !!aggregateInputs,
         aggregateDatasets: !!aggregateDatasets,
@@ -41,7 +43,7 @@ const crawler = new BasicCrawler({
 
 const startRequest = createPlaceholderRequest<ListUserData>(
     {
-        offset: 0,
+        offset: runOffset ?? 0,
         actorId,
         taskId,
         label: Labels.List,
