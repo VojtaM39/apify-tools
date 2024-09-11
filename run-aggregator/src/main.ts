@@ -25,7 +25,7 @@ if (!maxRuns) throw new Error('Missing maxRuns input');
 const client = Actor.newClient({ token: tokenOverride || process.env.TOKEN_OVERRIDE || process.env.APIFY_TOKEN });
 
 const crawler = new BasicCrawler({
-    maxConcurrency: 3,
+    maxConcurrency: 2,
     requestHandlerTimeoutSecs: 120,
     requestHandler: (context) => router({
         ...context,
