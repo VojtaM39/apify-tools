@@ -31,7 +31,7 @@ const crawler = new BasicCrawler({
         ...context,
         client,
         maxRuns,
-        runOffset,
+        initialOffset: runOffset,
         aggregateRunDetails: !!aggregateRunDetails,
         aggregateInputs: !!aggregateInputs,
         aggregateDatasets: !!aggregateDatasets,
