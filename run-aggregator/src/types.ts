@@ -26,7 +26,7 @@ export interface RunUserData extends BaseUserData {
 export interface ExtendedContext extends BasicCrawlingContext {
     client: ApifyClient;
     maxRuns: number;
-    runOffset: number;
+    initialOffset: number;
     aggregateRunDetails: boolean;
     aggregateInputs: boolean;
     aggregateDatasets: boolean;
