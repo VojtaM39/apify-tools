@@ -28,7 +28,7 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
             },
             `list-${nextOffset}`,
         );
-        await crawler.requestQueue?.addRequest(nextRequest);
+        await crawler.requestQueue?.addRequest(nextRequest, { forefront: true });
     }
 
     // Enqueue run requests
