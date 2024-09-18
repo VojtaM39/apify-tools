@@ -27,6 +27,18 @@
             "description": "Number of runs to skip",
             "default": 0
         },
+        "newestDate": {
+            "title": "Start date",
+            "type": "string",
+            "description": "Date in ISO format",
+            "editor": "textfield"
+        },
+        "oldestDate": {
+            "title": "End date",
+            "type": "string",
+            "description": "Date in ISO format",
+            "editor": "textfield"
+        },
         "aggregateRunDetails": {
             "title": "Aggregate run details",
             "type": "boolean",

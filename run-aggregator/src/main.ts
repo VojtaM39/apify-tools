@@ -11,6 +11,8 @@ const {
     taskId,
     maxRuns,
     runOffset = 0,
+    newestDate,
+    oldestDate,
     aggregateRunDetails,
     aggregateInputs,
     aggregateDatasets,
@@ -21,7 +23,12 @@ const {
     countOnlyMode,
 } = (await Actor.getInput<InputSchema>())!;
 
-if (!maxRuns) throw new Error('Missing maxRuns input');
+const isInRunCountLimitMode = !!(maxRuns || runOffset);
+const isInDateRangeMode = !!(newestDate || oldestDate);
+
+if (isInRunCountLimitMode === isInDateRangeMode) {
+    throw await Actor.fail('You either need to specify a date range (newestDate and oldestDate) or a run count limit (maxRuns and runOffset)');
+}
 
 const client = Actor.newClient({ token: tokenOverride || process.env.TOKEN_OVERRIDE || process.env.APIFY_TOKEN });
 
@@ -36,6 +43,8 @@ const commonOptions: BasicCrawlerOptions = {
         client,
         maxRuns,
         initialOffset: runOffset,
+        newestDate: newestDate ? new Date(newestDate) : undefined,
+        oldestDate: oldestDate ? new Date(oldestDate) : undefined,
         aggregateRunDetails: !!aggregateRunDetails,
         aggregateInputs: !!aggregateInputs,
         aggregateDatasets: !!aggregateDatasets,
