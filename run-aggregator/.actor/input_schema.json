@@ -69,6 +69,12 @@
             "description": "",
             "editor": "textfield",
             "isSecret": true
+        },
+        "countOnlyMode": {
+            "title": "Count only mode - only number of runs will be printed",
+            "type": "boolean",
+            "description": "",
+            "default": false
         }
     }
 }

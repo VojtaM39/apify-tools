@@ -1,4 +1,4 @@
-import { ActorRun, ApifyClient } from 'apify';
+import { ActorRun, ApifyClient, RequestQueue } from 'apify';
 import { Dataset } from 'apify-client';
 import { BasicCrawlingContext } from 'crawlee';
 
@@ -33,6 +33,7 @@ export interface ExtendedContext extends BasicCrawlingContext {
     aggregateLogs: boolean;
     aggregateDatasetInfo: boolean;
     truncateLogs?: number;
+    detailQueue: RequestQueue;
 }
 
 export interface InputSchema {
@@ -47,6 +48,7 @@ export interface InputSchema {
     aggregateDatasetInfo?: boolean;
     truncateLogs?: number;
     tokenOverride?: string;
+    countOnlyMode?: boolean;
 }
 
 export interface OutputItem {

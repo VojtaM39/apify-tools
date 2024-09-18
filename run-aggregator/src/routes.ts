@@ -6,7 +6,7 @@ import { createPlaceholderRequest } from './utils.js';
 
 export const router = createBasicRouter<ExtendedContext>();
 
-router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client, initialOffset }) => {
+router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client, initialOffset, detailQueue }) => {
     const { offset, actorId, taskId } = request.userData;
 
     const actorOrTaskClient = actorId ? client.actor(actorId) : client.task(taskId!);
@@ -42,7 +42,7 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
             },
             `run-${run.id}`,
         ));
-    await crawler.addRequests(runRequests);
+    await detailQueue.addRequests(runRequests);
 });
 
 router.addHandler<RunUserData>(Labels.Run, async ({
