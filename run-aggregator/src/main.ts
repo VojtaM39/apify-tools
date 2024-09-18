@@ -36,7 +36,7 @@ const listQueue = await Actor.openRequestQueue(`list-queue-${Actor.getEnv().acto
 const detailQueue = await Actor.openRequestQueue();
 
 const commonOptions: BasicCrawlerOptions = {
-    maxConcurrency: 2,
+    maxConcurrency: 1,
     requestHandlerTimeoutSecs: 120,
     requestHandler: (context) => router({
         ...context,
