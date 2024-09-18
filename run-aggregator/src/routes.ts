@@ -6,19 +6,22 @@ import { createPlaceholderRequest } from './utils.js';
 
 export const router = createBasicRouter<ExtendedContext>();
 
-router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client, initialOffset, detailQueue }) => {
+router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, crawler, client, initialOffset, detailQueue, newestDate, oldestDate }) => {
     const { offset, actorId, taskId } = request.userData;
 
     const actorOrTaskClient = actorId ? client.actor(actorId) : client.task(taskId!);
 
-    log.info(`[List] - offset: ${offset}, maxRuns: ${maxRuns}`);
+    log.info(`[List] - offset: ${offset}`);
 
-    const limit = Math.min(maxRuns - offset + initialOffset, RUNS_PER_PAGE);
+    const limit = maxRuns ? Math.min(maxRuns - offset + initialOffset, RUNS_PER_PAGE) : RUNS_PER_PAGE;
     const { items: runs } = await actorOrTaskClient.runs().list({ offset, limit, desc: true });
 
-    // Enqueue next page request
     const nextOffset = offset + limit;
-    if (nextOffset - initialOffset < maxRuns) {
+    const reachedMaxRunsLimit = maxRuns && (nextOffset - initialOffset >= maxRuns);
+    const reachedEndDate = oldestDate && runs[runs.length - 1].startedAt < oldestDate;
+
+    // Enqueue next page request
+    if (!reachedEndDate && !reachedMaxRunsLimit && runs.length === RUNS_PER_PAGE) {
         const nextRequest = createPlaceholderRequest<ListUserData>(
             {
                 label: Labels.List,
@@ -33,6 +36,11 @@ router.addHandler<ListUserData>(Labels.List, async ({ request, log, maxRuns, cra
 
     // Enqueue run requests
     const runRequests = runs
+        .filter((run) => {
+            if (newestDate && run.startedAt >= newestDate) return false;
+            if (oldestDate && run.startedAt <= oldestDate) return false;
+            return true;
+        })
         .map((run) => createPlaceholderRequest<RunUserData>(
             {
                 label: Labels.Run,

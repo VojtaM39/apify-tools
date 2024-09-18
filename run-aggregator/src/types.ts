@@ -25,8 +25,10 @@ export interface RunUserData extends BaseUserData {
 
 export interface ExtendedContext extends BasicCrawlingContext {
     client: ApifyClient;
-    maxRuns: number;
+    maxRuns?: number;
     initialOffset: number;
+    newestDate?: Date;
+    oldestDate?: Date;
     aggregateRunDetails: boolean;
     aggregateInputs: boolean;
     aggregateDatasets: boolean;
@@ -41,6 +43,8 @@ export interface InputSchema {
     taskId?: string;
     maxRuns?: number;
     runOffset?: number;
+    newestDate?: string;
+    oldestDate?: string;
     aggregateInputs?: boolean;
     aggregateDatasets?: boolean;
     aggregateRunDetails?: boolean;
