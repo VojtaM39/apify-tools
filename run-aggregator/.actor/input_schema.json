@@ -18,8 +18,7 @@
         "maxRuns": {
             "title": "Max Runs",
             "type": "integer",
-            "description": "",
-            "default": 1000
+            "description": ""
         },
         "runOffset": {
             "title": "Run offset",
