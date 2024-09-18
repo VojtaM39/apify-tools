@@ -78,7 +78,7 @@ const startRequest = createPlaceholderRequest<ListUserData>(
 await listCrawler.run([startRequest]);
 if (countOnlyMode) {
     // allow to refresh the detail queue stats
-    await new Promise((resolve) => setTimeout(resolve, 3_000));
+    await new Promise((resolve) => setTimeout(resolve, 8_000));
 
     const { pendingRequestCount } = await detailQueue.getInfo() ?? {};
     log.info(`Number of runs found: ${pendingRequestCount}`);
